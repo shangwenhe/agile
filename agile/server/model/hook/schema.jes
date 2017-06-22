@@ -63,7 +63,7 @@ try {
     var hook = mongoose.model('hook');
 }
 
-export default{ hook };
+export default { hook };
 
 
 /* eslint-enable */

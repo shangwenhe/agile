@@ -5,10 +5,16 @@
  * @description: this is a <jes> file
  */
 /* eslint-disable */
-import { hook }  from './schema';
+import schema from './schema';
+let { hook }  = schema;
 
-class ModelHook{
-    async find(){
+class ModelHook {
+    find(query, callback){
+        hook.find({}, callback);
+    }
+    save(data, callback){
+       let addhook = new hook(data);
+       addhook.save(callback);
         // callback(null, {mk: 'eee;'})
         // let user = new hook({
         //     username: 'shangwenhe' ,
@@ -19,14 +25,6 @@ class ModelHook{
         //     detail: 'detail',
         // });
         // user.save();
-        let result = await hook.find({username:'shangwenhe'});
-        let mk = 'er';
-        return result;
-
-    }
-    async save(data, callback){
-       let addhook = new hook(data);
-       addhook.save(callback);
     }
 }
 export default ModelHook;

@@ -6,6 +6,7 @@
  */
 /* eslint-disable */
 import ModelHook from '../../model/hook/'
+console.log(ModelHook)
 class ServiceHook extends ModelHook {
 }
 

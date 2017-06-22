@@ -5,13 +5,14 @@
  * @description: this is a <jes> file
  */
 /* eslint-disable */
+let mongoose = {
+    uri: 'mongodb://192.168.16.78:27017/agile',
+    options: {
 
-export default {
-    mongoose: {
-        uri: 'mongodb://192.168.16.78:27017/agile',
-        options:{
-        
-        }
     }
+}
+
+export {
+    mongoose
 }
 /* eslint-enable */
