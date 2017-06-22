@@ -4,28 +4,19 @@
  */
 
 fis.config.set('namespace', 'agile');
+fis.set('project.fileType.text', 'jes');
 
 // chrome下可以安装插件实现livereload功能
 // https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei
 
 // fis.config.set('livereload.port', 35729);
 
-fis.match('server/**.js', {
-    parser: fis.plugin('typescript'),
-    // parser: fis.plugin('babel'),
-    // parser: fis.plugin('typescript', {
-    //     module: 1,
-    //     target: 2
-    // }),
-});
 fis.match('server/**.jes', {
-    parser: fis.plugin('typescript'),
-    // parser: fis.plugin('babel'),
-    // parser: fis.plugin('typescript', {
-    //     module: 1,
-    //     target: 2
-    // }),
-    rExt: '.js',
+    parser: fis.plugin('typescript', {
+        module: 1,
+        target: 1
+    }),
+    rExt: 'js'
 });
 fis.match('server/conf/(**)', {
     optimizer: null,

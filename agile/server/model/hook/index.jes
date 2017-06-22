@@ -8,8 +8,7 @@
 import { hook }  from './schema';
 
 class ModelHook{
-    find(sql, callback){
-        console.log(sql, '===');
+    async find(){
         // callback(null, {mk: 'eee;'})
         // let user = new hook({
         //     username: 'shangwenhe' ,
@@ -20,7 +19,10 @@ class ModelHook{
         //     detail: 'detail',
         // });
         // user.save();
-        hook.find({username:'shangwenhe'},callback)
+        let result = await hook.find({username:'shangwenhe'});
+        let mk = 'er';
+        return result;
+
     }
     async save(data, callback){
        let addhook = new hook(data);

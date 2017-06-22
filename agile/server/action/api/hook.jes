@@ -5,7 +5,6 @@
  * @description: this is a <jes> file
  */
 /* eslint-disable */
-'use strict';
 
 function get(req, res){
     res.json({
@@ -13,9 +12,12 @@ function get(req, res){
     })
 }
 function post(req, res){
+    res.json({
+        msg: 'hook all ready'
+    })
 }
 export default {
     get, 
-    post
+    post,
 }
 /* eslint-enable */
