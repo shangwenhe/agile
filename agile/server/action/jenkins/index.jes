@@ -1,0 +1,61 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+'use strict'; 
+
+import serviceJenkins from '../../service/jenkins';
+
+function get(req, res){
+    serviceJenkins.find(null, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
+
+function post(req, res){
+    serviceJenkins.save(req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    });
+}
+/**
+ * @desc /agile/jenkins/:_id
+ */
+function deleted(req, res){
+    let { params, body } =  req;
+    serviceJenkins.delete(params, body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    });
+}
+
+
+/**
+ * @desc 从jenkins.xiaodutv.com上取得对应的任务列表
+ **/
+function remote(req, res){
+    serviceJenkins.list(null, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
+
+export default {
+    get, 
+    remote,
+    post,
+    delete: deleted
+}
+/* eslint-enable */

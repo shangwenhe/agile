@@ -1,0 +1,126 @@
+<template>
+    <div class="layout">
+        <i-Menu mode="horizontal" @on-select='menuselect' theme="dark"
+        :active-name="menuactive">
+            <div class="layout-logo"></div>
+            <div class="layout-ceiling">
+                <div class="layout-ceiling-main">
+                    <a href="#">注册登录</a> |
+                    <a href="#/config">配置</a> |
+                    <a href="#">安全中心</a> |
+                    <a @click='menuselect'>服务大厅</a>
+                </div>
+            </div>
+            <div class="layout-nav">
+                <Menu-item :name="key" v-for='(item, key) in mainNav'>
+                        <Icon :type="item.icontype"></Icon>
+                        {{item.name}}
+                </Menu-item>
+            </div>
+        </i-Menu>
+        <div class="layout-breadcrumb">
+            <Breadcrumb>
+                <Breadcrumb-item href="#">首页</Breadcrumb-item>
+                <Breadcrumb-item href="#">应用中心</Breadcrumb-item>
+                <Breadcrumb-item>某应用</Breadcrumb-item>
+            </Breadcrumb>
+        </div>
+        <slot name='content'>
+        </slot>
+        <div class="layout-copy">
+            2011-2016 &copy; TalkingData
+        </div>
+    </div>
+</template>
+<style scoped>
+    .layout{
+        border: 1px solid #d7dde4;
+        background: #f5f7f9;
+    }
+    .layout-logo{
+        width: 100px;
+        height: 30px;
+        background: #5b6270;
+        border-radius: 3px;
+        float: left;
+        position: relative;
+        top: 15px;
+        left: 20px;
+    }
+    .layout-nav{
+        width: 420px;
+        margin: 0 auto;
+    }
+    .layout-assistant{
+        width: 300px;
+        margin: 0 auto;
+        height: inherit;
+    }
+    .layout-breadcrumb{
+        padding: 10px 15px 0;
+    }
+    .layout-content{
+        min-height: 200px;
+        margin: 15px;
+        background: #fff;
+        border-radius: 4px;
+    }
+    .layout-content-main{
+        padding: 10px;
+    }
+    .layout-copy{
+        text-align: center;
+        padding: 10px 0 20px;
+        color: #9ea7b4;
+    }
+    .layout-ceiling{
+        position: absolute;
+        right:10px;
+    }
+</style>
+<script>
+    export default {
+        data(){
+            return {
+                mainNav:[
+                    {
+                        'name': '主页',
+                        'icontype': 'ios-navigate',
+                        'href': '/home'
+                    },
+                    {
+                        'name': 'task',
+                        'icontype': 'ios-keypad',
+                        'href': '/task'
+                    },
+                    {
+                        'name': '配置',
+                        'icontype': 'ios-analytics',
+                        'href': '/config'
+                    },
+                ],
+                subnav: [],
+                menuactive: 0
+            }
+        },
+        created(){
+            // 选中导航
+            let route = this.$route;
+            this.mainNav.forEach((item, key)=>{
+                if(item.href == route.path){
+                    this.menuactive = key;
+                }
+            });
+        },
+        watch:{
+            '$route'(to, from){
+                console.log(to, from) 
+            }
+        },
+        methods:{
+            menuselect(i){
+                let path = this.mainNav[i].href; 
+                this.$router.push({ path });
+            }
+        }
+    }

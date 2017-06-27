@@ -10,7 +10,7 @@
 
 'use strict'; 
 
-import servicehook from '../../service/hook/';
+import servicehook from '../../service/hook';
 
 function get(req, res){
     servicehook.find(null, function(err, data){
@@ -23,7 +23,11 @@ function get(req, res){
 
 
 function post(req, res){
-
+    servicehook.save(req.body, function(err, data){
+        res.json({
+            success: ''
+        })
+    })
 }
 export default {
     get, 

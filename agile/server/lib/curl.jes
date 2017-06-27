@@ -1,0 +1,64 @@
+/**
+ * @file: curl.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+const { exec } = require('child_process');
+
+class Curl {
+
+    constructor(...cmd) {
+        this.cmd = ['curl'];
+        this.cmd = this.cmd.concat(cmd);
+    }
+    exec(url, callback) {
+        this.cmd.push(url);
+        console.log(this.cmd.join(' '))
+        exec(this.cmd.join(' '), (err, data) => {
+            let result;
+            try{
+                result =  data && JSON.parse(data) || data;
+            }catch(e){
+                result =  data;
+            
+            }
+            callback.call(this, err, result);
+        });
+    }
+    get(url, callback) {
+        this.cmd.splice(1, 0, '-X GET');
+        this.exec(url, callback)
+    }
+
+    post(url, callback) {
+        this.cmd.splice(1, 0, '-X POST');
+        this.exec(url, callback)
+    }
+
+    put(url, callback) {
+        this.cmd.splice(1, 0, '-X PUT');
+        this.exec(url, callback)
+    }
+    delete(url, callback) {
+        this.cmd.splice(1, 0, '-X delete');
+        this.exec(url, callback)
+
+    }
+}
+/**
+ * @desc 示例
+ *   let curl = new Curl(
+ *           '--header 12312323',
+ *           '--data-urlencode json=\'{}\''
+ *           );
+ *   curl.get(
+ *       'http://jenkins.xiaodutv.com/job/CodeCompilation/api/json\?depth\=0',
+ *       callback
+ *   );
+ */
+export
+default Curl;
+/* eslint-enable */

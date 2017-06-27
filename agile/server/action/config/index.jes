@@ -1,0 +1,47 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+'use strict'; 
+
+import serviceconfig from '../../service/config';
+
+function get(req, res){
+
+    serviceconfig.find({}, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
+
+
+function namespace(req, res){
+
+    let { path_with_namespace }= req.params;
+    serviceconfig.find({path_with_namespace}, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
+
+function post(req, res){
+    serviceconfig.save(req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+}
+export default {
+    get, 
+    post,
+    namespace
+}
+/* eslint-enable */

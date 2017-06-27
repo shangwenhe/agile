@@ -1,0 +1,28 @@
+/**
+ * @file: config.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import ModelConfig from '../model/config/';
+import serviceGitlab from './gitlab';
+import async from 'async';
+class ServiceConfig extends ModelConfig {
+    find(query, callback) {
+        // 调用父类的find方法 对其结果进行再数据再次更新
+        super.find(query, function(err, result) {
+            async.map(result, function(item, callback) {
+                serviceGitlab.findbyid({ id: item.repertory }, function(err, result){
+                    callback(err, Object.assign({}, item._doc ,{ repertory: result}))
+                })
+            }, callback);
+
+        })
+
+    }
+}
+
+export
+default new ServiceConfig;
+/* eslint-enable */

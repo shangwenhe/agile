@@ -1,0 +1,63 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+'use strict'; 
+
+import serviceGitlab from '../../service/gitlab';
+
+function get(req, res){
+    serviceGitlab.list(null, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
+
+
+function post(req, res){
+    serviceGitlab.save(req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+}
+
+
+/**
+ * @desc  从git.xiaodutv.com 代码服务平台上取得指定仓库的webhook
+ */
+function hook(req, res){
+    serviceGitlab.hook(req.params, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+
+}
+/**
+ * @desc  为git.xiaodutv.com 代码服务平台上指定的仓库添加webhook
+ */
+function addhook(req, res){
+    serviceGitlab.addhook(req.params, req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+
+}
+export default {
+    get, 
+    post,
+    hook,
+    addhook
+}
+
+/* eslint-enable */

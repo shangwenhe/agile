@@ -1,0 +1,35 @@
+/**
+ * @file: schema.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+let JENKINSSCHEMA = {
+    name: {
+        type: String
+    },
+    taskname: {
+        type: String
+    },
+    url: {
+        type: String
+    },
+    is_delete:{
+        type: Boolean,
+        default: false,
+    }
+};
+
+let modelJenkinsSchema = Schema(JENKINSSCHEMA);
+try {
+    var jenkins = mongoose.model('jenkins', modelJenkinsSchema);
+} catch (e) {
+    var jenkins = mongoose.model('jenkins');
+}
+
+export default { jenkins };
+/* eslint-enable */

@@ -1,0 +1,177 @@
+<template>
+    <div class='tmpl-config'>
+        <i-form :model="formItem" :label-width="80">
+            <Alert :type="info.type" show-icon v-if='info'>
+                {{info.title}}
+                <span slot="desc">
+                    {{info.message}}
+                </span>
+            </Alert>
+
+            <h2> 工作流基本配置 </h2>
+                <Form-item label="任务名">
+                    <i-input v-model="formItem.name" placeholder="请输入"></i-input>
+                </Form-item>
+
+            <h2> 流仓库配置 </h2>
+                <Form-item label="代码库">
+                    <i-select placeholder="请选择" v-model="formItem.repertory">
+                        <i-option v-for="(repertory, index) in mate.repertory" :value="index">{{repertory.name}} :: {{repertory.web_url}}</i-option>
+                    </i-select>
+                </Form-item>
+
+                <Form-item label="webhook">
+                    <i-input v-model="formItem.webhook" placeholder="请输入"></i-input>
+                </Form-item>
+
+            <h2> 流任务配置 </h2>
+              <Form-item
+                    v-for="(task, index) in mate.tasks"
+                    :key="task"
+                    :label="'任务' + (index + 1)"
+                    :rules="{required: true, message: '任务' + (index + 1) +'不能为空', trigger: 'blur'}">
+                    <Row>
+                        <i-col span="18">
+                            <i-select placeholder="请选择" v-model="formItem.tasks[index]">
+                                <i-option v-for="item in task.select" :value="item._id">{{item.taskname}} :: {{item.url}}</i-option>
+                            </i-select>
+                        </i-col>
+                        <i-col span="4" offset="1">
+                            <i-button type="ghost" @click="handleRemove(index)">删除</i-button>
+                        </i-col>
+                    </Row>
+                </Form-item>
+                <Form-item>
+                    <Row>
+                        <i-col span="12">
+                            <i-button type="dashed" long @click="handleAdd" icon="plus-round">新增任务流</i-button>
+                        </i-col>
+                    </Row>
+                </Form-item>
+                <Form-item>
+                    <i-button type="primary" @click='submit'>提交</i-button>
+                    <i-button type="ghost" style="margin-left: 8px">取消</i-button>
+                </Form-item>
+
+        </i-form>
+    </div>
+</template>
+<style lang='less'>
+.tmpl-config{
+    display: block;
+    padding: 10px;
+    h2{
+        margin: 24px 0;
+    }
+}
+</style>
+<script type='text/javascript'>
+    import axios  from '../static/lib/ajax/axios.js';
+    export default{
+        data(){
+            return {
+                mate:{
+                    repertory: [],
+                    tasks:[],
+                },
+                formItem:{
+                    name: '',
+                    webhook: '',
+                    repertory: '',
+                    tasks: []
+                },
+                info: null,
+                /*info: {
+                     type: 'success || error',
+                     title: '',
+                     message: ''
+                }*/
+            }
+        },
+        props: [],
+        created(){
+            axios.get('/agile/gitlab').then((response)=>{
+                this.mate.repertory = response.data.data;
+                
+            });
+            axios.get('/agile/jenkins').then((response)=>{
+                this.mate.tasks = [{   
+                    value: 'Jenkins',
+                    select: response.data.data
+                }];
+            });
+        },
+        methods:{
+            addJenkinsTask(){
+                console.log('iii');
+            },
+            handleAdd () {
+                this.mate.tasks.push(Object.assign({}, this.mate.tasks[0]));
+            },
+            handleRemove (index) {
+                this.mate.tasks.splice(index, 1);
+                this.formItem.tasks.splice(index, 1);
+            },
+            submit(){
+                let { name ,repertory, tasks, webhook}  = this.formItem;
+                if(!name){
+                    this.info ={
+                        type:'error',
+                        title: '任务名出错',
+                        message: '请正确填写任务名!'
+                    }
+                    return;
+                }
+
+                console.log(this.mate.repertory[repertory] , repertory)
+
+                if( !this.mate.repertory[repertory] || repertory === ''){
+                    this.info ={
+                        type:'error',
+                        title: '选择仓库出错',
+                        message: '请正确选择仓库!'
+                    }
+                    return;
+                }
+                if(!webhook){
+                    this.info ={
+                        type:'error',
+                        title: '填写webhook出错',
+                        message: '请正确填写webhook!'
+                    }
+                    return;
+                }
+                if(!tasks.length){
+                    this.info ={
+                        type:'error',
+                        title: '选择jenkins配置出错',
+                        message: '请正确选择jenkins配置!'
+                    }
+                    return;
+                }
+
+                this.info ={
+                    type:'success',
+                    title: '成功',
+                    message: '获取jenkins任务列表'
+                }
+
+                axios.post('/agile/config', Object.assign({}, this.formItem, {
+                    repertory: this.mate.repertory[repertory]['id'],
+                    path_with_namespace: this.mate.repertory[repertory]['path_with_namespace']
+                })).then((response)=>{
+                    this.formItem ={
+                        name: '',
+                        webhook: '',
+                        repertory: '',
+                        tasks: []
+                    };
+                });
+
+            }
+        },
+        watch:{
+        },
+        components: { },
+    }
+</script>

@@ -6,25 +6,17 @@
  */
 /* eslint-disable */
 import schema from './schema';
-let { hook }  = schema;
+let { hook } = schema;
 
 class ModelHook {
-    find(query, callback){
+    find(query, callback) {
         hook.find({}, callback);
     }
-    save(data, callback){
-       let addhook = new hook(data);
-       addhook.save(callback);
-        // callback(null, {mk: 'eee;'})
-        // let user = new hook({
-        //     username: 'shangwenhe' ,
-        //     branch_name: 'branch_name',
-        //     name_space: 'name_space',
-        //     commit_id: 'commit_id',
-        //     path: 'path',
-        //     detail: 'detail',
-        // });
-        // user.save();
+    save(data, callback) {
+        let addhook = new hook(Object.assign({},data,{
+            pristine: JSON.stringify(data)
+        }));
+        addhook.save(callback);
     }
 }
 export default ModelHook;

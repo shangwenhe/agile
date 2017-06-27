@@ -5,8 +5,7 @@
  * @description: this is a <jes> file
  */
 /* eslint-disable */
-import ModelHook from '../../model/hook/'
-console.log(ModelHook)
+import ModelHook from '../model/hook/'
 class ServiceHook extends ModelHook {
 }
 

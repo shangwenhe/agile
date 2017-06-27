@@ -26,44 +26,130 @@ var Schema = mongoose.Schema;
 
 
 let HOOKSCHEMA = {
-    username: {
+    object_kind: {
+        type: String
+    },
+    before: {
+        type: String
+    },
+    after: {
+        type: String
+    },
+    ref: {
+        type: String
+    },
+    checkout_sha: {
+        type: String
+    },
+    message: {
         type: String,
-        required: 'username is required!'
+        default: null
     },
-    time: {
-        type: Date,
-        default: (new Date()).valueOf()
+    user_id: {
+        type: Number
     },
-    branch_name: {
-        type: String,
-        required: true
+    user_name: {
+        type: String
     },
-    name_space: {
-        type: String,
-        required: true
+    user_email: {
+        type: String
     },
-    commit_id: {
-        type: String,
-        required: true
+    user_avatar: {
+        type: String
     },
-    path: {
-        type: String,
-        required: true
+    project_id: {
+        type: Number
     },
-    detail: {
-        type: Buffer,
-        required: true
+    project: {
+        name: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        web_url: {
+            type: String
+        },
+        avatar_url: {
+            type: String,
+            default: null
+        },
+        git_ssh_url: {
+            type: String
+        },
+        git_http_url: {
+            type: String
+        },
+        namespace: {
+            type: String
+        },
+        visibility_level: {
+            type: Number
+        },
+        path_with_namespace: {
+            type: String
+        },
+        default_branch: {
+            type: String
+        },
+        homepage: {
+            type: String
+        },
+        url: {
+            type: String
+        },
+        ssh_url: {
+            type: String
+        },
+        http_url: {
+            type: String
+        }
+    },
+    commits: {
+        type: Array
+    },
+    total_commits_count: {
+        type: Number
+    },
+    repository: {
+        name: {
+            type: String
+        },
+        url: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        homepage: {
+            type: String
+        },
+        git_http_url: {
+            type: String
+        },
+        git_ssh_url: {
+            type: String
+        },
+        visibility_level: {
+            type: Number
+        }
+    },
+    pristine: {
+        type: Buffer
     }
 };
 
 let modelHookSchema = Schema(HOOKSCHEMA);
 try {
     var hook = mongoose.model('hook', modelHookSchema);
-} catch(e) {
+} catch (e) {
     var hook = mongoose.model('hook');
 }
 
-export default { hook };
+export
+default {
+    hook
+};
 
 
 /* eslint-enable */

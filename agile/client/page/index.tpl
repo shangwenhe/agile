@@ -14,12 +14,27 @@
     {% endhead %}
     {% body %}
         <div id="app">
-          <router-view></router-view>
+            <layout> 
+                <router-view class='layout-content' slot='content'></router-view>
+            </layout> 
         </div>
         {% script %}
-            require.async(["vue", "agile:static/lib/vue/vue-router.min.js"],
-            function(Vue,VueRouter,routes){
-            })
+        require.async(["vue", "agile:static/lib/vue/vue-router.min.js", 'agile:router.js'], function(Vue,VueRouter,routes){
+            // iView 模块库
+            let iView = require("agile:static/lib/ivue/iview.min.js");
+            Vue.use(iView);
+
+            Vue.use(VueRouter)
+
+            let layout = require("agile:widget/layout/layout.vjs");
+            Vue.component('layout', layout.default);
+
+            const router = new VueRouter( routes)
+            const app = new Vue({
+              router
+            }).$mount('#app');
+
+        })
 
         {% endscript %}
     {% endbody %}

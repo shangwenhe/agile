@@ -1,0 +1,47 @@
+/**
+ * @file: schema.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
+
+let CONFIGSCHEMA = {
+    name: {
+        type: String
+    },
+    repertory: {
+        type: Number 
+    },
+    tasks: {
+        type: Array,
+        default: []
+    },
+    path_with_namespace:{
+        type: String
+    },
+    webhook: {
+        type: String
+    },
+    create_time:{
+        type: Date,
+        default: (new Date()).valueOf()
+    },
+    is_delete:{
+        type: Boolean,
+        default: false,
+    }
+};
+
+let modelConfigSchema = Schema(CONFIGSCHEMA);
+try {
+    var config = mongoose.model('config', modelConfigSchema);
+} catch (e) {
+    var config = mongoose.model('config');
+}
+
+export default { config };
+/* eslint-enable */

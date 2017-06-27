@@ -1,0 +1,40 @@
+<template>
+    <div class='tmpl-build'>
+        build
+        {{branch}}
+        {{path}}
+    </div>
+</template>
+<style lang='less'>
+.tmpl-build{
+
+}
+</style>
+<script type='text/javascript'>
+    export default{
+        data(){
+            return {
+                branch: '',
+                path: ''
+            }
+        },
+        props: [],
+        created(){
+            this.changepath();
+        },
+        watch:{
+            '$route'(npath, opath){
+                this.changepath();
+            }
+        },
+        methods:{
+            changepath(){
+                let {branch, path } = this.$route.params;
+                this.branch = branch ;
+                this.path = path ;
+            }
+        },
+        components: { },
+
+    }
+</script>

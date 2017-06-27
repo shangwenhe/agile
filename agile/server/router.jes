@@ -22,4 +22,20 @@ module.exports = function(router){
     //     .get(router.action('book').get)
     //     // DELETE /agile/book/1
     //     .delete(router.action('book').delete);
+
+    router.get('/jenkins/remote', router.action('jenkins/index').remote);
+    router.delete('/jenkins/:_id', router.action('jenkins/index').delete);
+    
+
+    /**
+     * @desc gitlab 相关的
+     **/
+    router.get('/gitlab/hook/:id', router.action('gitlab/index').hook);
+    router.get('/gitlab/:id', router.action('gitlab/index').hook);
+    router.post('/gitlab/hook/:id', router.action('gitlab/index').addhook);
+    
+    /**
+     * @desc config 相关的
+     **/
+    router.get('/config/:path_with_namespace(\\w*)', router.action('config/index').namespace);
 };

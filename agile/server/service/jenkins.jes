@@ -1,0 +1,34 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+import Curl from '../lib/curl';
+import ModelJenkins from '../model/jenkins/';
+
+class ServiceJenkins extends ModelJenkins {
+    constructor(){
+        super();
+        this.conf ={
+            user: '--user shangwenhe:4d23faf3e4a6dbd1d61ad04e916ada4f',
+        } 
+    }
+    list(view, callback) {
+        let curl = new Curl(this.conf.user);
+        curl.get(
+            'http://jenkins.xiaodutv.com/job/CodeCompilation/api/json\?depth\=0',
+            callback
+        );
+    }
+    // save(body, callback) {
+    //     callback(null, {
+    //         body
+    //     })
+    // }
+}
+
+export default new ServiceJenkins;
+/* eslint-enable */

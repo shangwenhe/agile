@@ -1,0 +1,21 @@
+<template>
+    <div class='tmpl-nav'>
+        iiiiinavnavnav
+    </div>
+</template>
+<style lang='less'>
+.tmpl-nav{
+    display: block
+}
+</style>
+<script type='text/javascript'>
+    export default{
+        data(){
+            return {
+            
+            }
+        },
+        props: [],
+        components: { }
+    }
+</script>
