@@ -21,7 +21,6 @@ function get(req, res){
 
 
 function namespace(req, res){
-
     let { path_with_namespace }= req.params;
     serviceconfig.find({path_with_namespace}, function(err, data){
         res.json({

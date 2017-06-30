@@ -67,6 +67,7 @@ class ServiceGitlab {
      */
 
     addhook(params, body, callback){
+
         let contentType = '--header  \"Content-Type: application/json\"';
         let urlencode = '--data \'' + JSON.stringify(body) + '\'';
         let id = params.id;

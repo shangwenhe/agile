@@ -1,0 +1,13 @@
+/**
+ * @file: build.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-30
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import modelBuild from '../model/build/';
+
+class serviceBuild extends modelBuild{    
+}
+export default new serviceBuild
+/* eslint-enable */

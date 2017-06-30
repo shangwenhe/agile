@@ -6,7 +6,7 @@
             <div class="layout-ceiling">
                 <div class="layout-ceiling-main">
                     <a href="#">注册登录</a> |
-                    <a href="#/config">配置</a> |
+                    <a href="#/jenkins">任务流水</a> |
                     <a href="#">安全中心</a> |
                     <a @click='menuselect'>服务大厅</a>
                 </div>
@@ -89,9 +89,9 @@
                         'href': '/home'
                     },
                     {
-                        'name': 'task',
+                        'name': 'build',
                         'icontype': 'ios-keypad',
-                        'href': '/task'
+                        'href': '/build'
                     },
                     {
                         'name': '配置',
@@ -100,7 +100,7 @@
                     },
                 ],
                 subnav: [],
-                menuactive: 0
+                menuactive: ''
             }
         },
         created(){

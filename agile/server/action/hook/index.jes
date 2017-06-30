@@ -13,7 +13,7 @@
 import servicehook from '../../service/hook';
 
 function get(req, res){
-    servicehook.find(null, function(err, data){
+    servicehook.find({}, function(err, data){
         res.json({
             err, 
             data
@@ -21,6 +21,19 @@ function get(req, res){
     })    
 }
 
+function gethookbyid(req, res){
+    let { project_id } =  req.params;
+
+    // 如果query中存在ref则使用正则表达式
+    let ref  = req.query.ref && { ref : new RegExp(req.query.ref) } || {};
+
+    servicehook.find(Object.assign({project_id}, req.query , ref ), function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })    
+}
 
 function post(req, res){
     servicehook.save(req.body, function(err, data){
@@ -31,6 +44,7 @@ function post(req, res){
 }
 export default {
     get, 
-    post
+    post,
+    gethookbyid 
 }
 /* eslint-enable */

@@ -23,6 +23,15 @@ module.exports = function(router){
     //     // DELETE /agile/book/1
     //     .delete(router.action('book').delete);
 
+    /**
+     * @desc hook 
+     */
+    router.get('/hook/:project_id', router.action('hook/index').gethookbyid);
+
+
+    /**
+     * @desc jenkins
+     **/
     router.get('/jenkins/remote', router.action('jenkins/index').remote);
     router.delete('/jenkins/:_id', router.action('jenkins/index').delete);
     

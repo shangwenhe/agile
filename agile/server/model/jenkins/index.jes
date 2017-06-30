@@ -11,7 +11,7 @@ let { jenkins } = schema;
 
 class ModelJenkins  {
     find(query, callback) {
-        jenkins.find({is_delete: false}, callback);
+        jenkins.find(Object.assign({is_delete: false}, query), callback);
     }
     save(data, callback) {
         let addjenkins = new jenkins(Object.assign({},data));

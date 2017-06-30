@@ -10,15 +10,16 @@ let { config } = schema;
 
 
 class ModelConfig  {
-
     find(query, callback) {
         console.log(query)
         config.find(Object.assign({is_delete: false},query), callback);
     }
+
     save(data, callback) {
         let addConfig = new config(Object.assign({},data));
         addConfig.save(callback);
     }
+
     delete(id, body, callback){
         let is_delete = body.is_delete || true;
         config.update(id, {$set : { is_delete }} , callback);

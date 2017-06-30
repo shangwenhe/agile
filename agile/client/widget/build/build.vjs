@@ -3,19 +3,88 @@
         build
         {{branch}}
         {{path}}
+        <div class='tasklist'>
+        <h2> 任务列表 </h2>
+            <Row class='buildlist' v-for='(item, index) in list'>
+               <div class='autoflex'>
+                <i-col class='flex'>
+                    <Row>
+                        <i-col span='12'>
+                        {{item.task}}
+                        <Icon type="fork-repo"></Icon> {{item.checkout_sha.replace(/^(.{8}).*$/,'$1')}}
+                        </i-col>
+                        <i-col span='12'>
+                        <Icon type="ios-speedometer-outline"></Icon> {{(new Date(item.commits[0]['timestamp'])).toLocaleString() }}
+                        </i-col>
+                    </Row>
+                    <Row>
+                        <i-col span='12'>
+                        <Icon type="code-working"></Icon> {{item.user_email}}
+                        </i-col>
+                        <i-col span='12'>
+                        <Icon type="ios-chatboxes-outline"></Icon> {{ item.message || item.commits[0]['message']}}
+                        </i-col>
+                    </Row>
+                    <Row>
+                    <Icon type="social-github"></Icon> 
+                    <p v-for='commit in item.commits'>
+                        <a :href='commit.url' target='_blank'>{{ commit.message }}</a>
+                    </p>
+                    </Row>
+                </i-col>
+                <i-col class='flex' v-for='(task, index) in tasklist'>
+                   {{task.name}} 
+                   {{task.taskname}} 
+                   <p>
+                   CONFIG ID{{configid}}
+                   </p>
+                   <p>
+                   任务ID{{task._id}}
+                   </p>
+                   <p>
+                   PUSHID {{item._id}}
+                   </p>
+                   <i-button type="success" shape="circle" @click='build(item._id, task._id, configid)'> &nbsp; {{task.taskname}} &nbsp;</i-button>
+                </i-col>
+               </div>
+
+                <i-col span='24'> ======= </i-col>
+
+            </Row>
+        </div>
     </div>
 </template>
 <style lang='less'>
 .tmpl-build{
+    display: block;
+    padding: 10px;
+    h2{
+        margin: 24px 0;
+    }
+    .tasklist{
+        line-height: 40px;
+        .title{
+            font-weight: 800;
+        }
+        .autoflex{
+            display: flex;
+            .flex{
+                flex: 1; 
+            }
+        }
+    }
 
 }
 </style>
 <script type='text/javascript'>
+    import axios  from '../static/lib/ajax/axios.js';
     export default{
         data(){
             return {
                 branch: '',
-                path: ''
+                path: '',
+                list:[],
+                tasks: []
             }
         },
         props: [],
@@ -32,6 +101,39 @@
                 let {branch, path } = this.$route.params;
                 this.branch = branch ;
                 this.path = path ;
+                // 配置 config
+                axios.get(['/agile/config/', path].join("")).then( (response) => {
+                    let { repertory, tasks, _id }= response.data.data[0];
+                    this.tasklist = tasks;
+                    this.configid = _id;
+
+                    // hook list
+                    axios.get(['/agile/hook/', repertory.id].join(""), { params: {
+                        ref: branch+'$'
+                    }}).then( (response) => {
+                        this.list = response.data.data.map(function(item){
+                                return item; 
+                        });
+                       console.log(this.list) 
+                    });
+                });
+
+            },
+            build(push_id, task_id, config_id){
+                axios.post('agile/build',{
+                    config_id,
+                    push_id, 
+                    task_id, 
+                    info:[
+                        {
+                            status: 'build',
+                            result: '======',
+                            }
+                    ],
+                    create_time: (new Date()).valueOf()
+                }).then((response)=>{
+                    console.log(response.data) 
+                });
             }
         },
         components: { },

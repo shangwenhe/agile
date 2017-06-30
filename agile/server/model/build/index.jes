@@ -1,0 +1,45 @@
+/**
+ * @file: build.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-30
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import schema from './schema';
+let { build } = schema;
+
+
+class ModelBuild  {
+    
+    // find
+    find(query, callback) {
+        build.find(Object.assign({is_delete: false},query)).limit(10).exec(callback);
+    }
+
+    // save
+    save(data, callback) {
+        let addbuild = new build(Object.assign({},data));
+        addbuild.save(callback);
+    }
+
+    update(params, body, callback){
+        // params  = {
+        // config_id,
+        // push_id,
+        // task_id
+        // }
+        // info = {}
+        build.update(params, {$push : { info } } , callback);
+    }
+
+    updatestate(id, state, callback){
+        build.update(id, {$set: {task_status: state}}, callback );
+    }
+
+    delete(id, body, callback){
+        let is_delete = body.is_delete || true;
+        build.update(id, {$set : { is_delete }} , callback);
+    }
+}
+export default ModelBuild;
+/* eslint-enable */

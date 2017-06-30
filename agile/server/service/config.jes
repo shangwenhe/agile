@@ -7,19 +7,56 @@
 /* eslint-disable */
 import ModelConfig from '../model/config/';
 import serviceGitlab from './gitlab';
+import serviceJenkins from './jenkins';
 import async from 'async';
 class ServiceConfig extends ModelConfig {
     find(query, callback) {
         // 调用父类的find方法 对其结果进行再数据再次更新
         super.find(query, function(err, result) {
+            /** 
+             * @desc 对find取出的数据循环 解析
+             */ 
             async.map(result, function(item, callback) {
-                serviceGitlab.findbyid({ id: item.repertory }, function(err, result){
-                    callback(err, Object.assign({}, item._doc ,{ repertory: result}))
-                })
+                //
+                async.waterfall([
+                    function(callback){
+                        /** 
+                         * @desc 展开item.repertory 对应的ID
+                         */ 
+                        serviceGitlab.findbyid({ id: item.repertory }, function(err, result){
+                            callback(err, Object.assign({}, item._doc ,{ repertory: result}))
+                        })
+                    },
+                    function(result, callback){
+                        /** 
+                         * @desc 展开tasks 对应的ID
+                         */ 
+                        async.map(result.tasks, function(item, callback){
+                           console.log(item) 
+                            serviceJenkins.find({_id: item}, function(err, result){
+                                callback(err, result[0])
+                            })
+                        }, function(error, tasks){
+                            callback(null, Object.assign({}, result, { tasks }));
+                        })
+                    }
+                ],callback);
             }, callback);
-
         })
 
+    }
+    save(data, callback){
+        serviceGitlab.addhook({id: data.repertory}, {
+            id: data.repertory,
+            url: data.webhook
+        }, (err, result) => {
+            if(err){
+                callback(err);
+                return;
+            }
+            super.save(data, callback) 
+        })
+    
     }
 }
 

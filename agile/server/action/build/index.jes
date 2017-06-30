@@ -1,0 +1,63 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-30
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import serviceBuild from '../../service/build'
+// get 
+function get(req, res){
+   serviceBuild.find(req.query, function(err, data){
+        res.json({
+            err, 
+            data
+        }) 
+   }) 
+}
+// post
+function post(req, res){
+   serviceBuild.save(req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        }) 
+   }) 
+}
+function deletebyid(req, res){
+   serviceBuild.delete(req.params, req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        }) 
+   }) 
+}
+
+/** update
+ * 向task表添加多次触发的任务
+ */ 
+function update(req, res){
+   serviceBuild.update(req.params, req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        }) 
+   }) 
+}
+function updatestate(req, res){
+   serviceBuild.updatestate(req.params, req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        }) 
+   }) 
+}
+
+export default {
+    get,
+    post,
+    update,
+    updatestate,
+    delete: deletebyid
+}
+/* eslint-enable */

@@ -23,11 +23,6 @@ class ServiceJenkins extends ModelJenkins {
             callback
         );
     }
-    // save(body, callback) {
-    //     callback(null, {
-    //         body
-    //     })
-    // }
 }
 
 export default new ServiceJenkins;

@@ -1,0 +1,70 @@
+/**
+ * @file: schema.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-30
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
+
+let BUILDSCHEMA = {
+    config_id: {
+        type: ObjectId,
+        require: true
+    },
+    push_id: {
+        type: ObjectId,
+        require: true
+    },
+    task_id: {
+        type: ObjectId,
+        require: true
+    },
+    info: [{
+            status: String,
+            result: Buffer,
+            start_time: {
+                type: Date,
+                default: Date.now
+            },
+            end_time: {
+                type: Date,
+                default: (new Date('2017-01-01 00:00:00')).valueOf()
+            }
+        }
+
+    ],
+    // info[0] = {
+    //      status
+    //      result
+    //      start_time
+    //      end_time
+    // }
+    create_time: {
+        type: Date,
+        default: Date.now
+    },
+    task_status: {
+        type: Boolean,
+        default: false,
+    },
+    is_delete: {
+        type: Boolean,
+        default: false,
+    }
+};
+
+let modelBuildSchema = Schema(BUILDSCHEMA);
+try {
+    var build = mongoose.model('build', modelBuildSchema);
+} catch (e) {
+    var build = mongoose.model('build');
+}
+
+export
+default {
+    build
+};
+/* eslint-enable */

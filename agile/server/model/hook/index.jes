@@ -10,7 +10,8 @@ let { hook } = schema;
 
 class ModelHook {
     find(query, callback) {
-        hook.find({}, callback);
+        console.log(query);
+        hook.find(query, callback);
     }
     save(data, callback) {
         let addhook = new hook(Object.assign({},data,{
