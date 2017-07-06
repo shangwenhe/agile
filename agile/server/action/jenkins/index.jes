@@ -52,10 +52,21 @@ function remote(req, res){
     })    
 }
 
+function buildResult(req, res){
+    serviceJenkins.completed(req.body, function(err, data){
+        res.json({
+            err,
+            data
+        });
+    });
+}
+
+
 export default {
     get, 
     remote,
     post,
-    delete: deleted
+    delete: deleted,
+    buildResult
 }
 /* eslint-enable */

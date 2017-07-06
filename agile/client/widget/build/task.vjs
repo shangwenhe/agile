@@ -8,10 +8,10 @@
                    任务ID{{task._id}}
                    PUSHID {{item._id}}
                </p>
-                <div v-if=' info '>
-                    <p><Icon type="clock">start</Icon>  {{ detailinfo.start_time }}</p>
-                    <p><Icon type="clock">end</Icon> {{ detailinfo.end_time }}</p>
-                    <p><Icon type="stats-bars"></Icon> {{ detailinfo.status }}</p>
+                <div v-if='info'>
+                    <p><Icon type="clock">start</Icon>  {{ info.start_time }}</p>
+                    <p><Icon type="clock">end</Icon> {{ info.end_time }}</p>
+                    <p><Icon type="stats-bars"></Icon> {{ info.status }}</p>
                 </div>
                 <div v-if='!info'>
                    <i-button type="success" shape="circle" @click='build(item._id, task._id, configid)'> 执行 </i-button>
@@ -57,6 +57,7 @@
     }
 </style>
 <script type='text/javascript'>
+    import axios  from '../static/lib/ajax/axios.js';
     export default{
         data(){
             return {
@@ -73,6 +74,7 @@
             let detail = this.item.buildGroup[this.task._id]
             let info = detail && detail[detail.length-1] || false;
             this.info = info &&  info.info.pop()  || false;
+            console.log(this.info)
             this.state = this.info && this.info.status || '' ;
         },
         methods:{ 
@@ -81,12 +83,10 @@
                     config_id,
                     push_id,
                     task_id,
-                    info:[
-                        {
-                            status: 'build',
-                            result: '======',
-                            }
-                    ],
+                    info:[{
+                        status: 'build',
+                        result: '======',
+                    }],
                     create_time: (new Date()).valueOf()
                 }).then((response)=>{
                     console.log(response.data)

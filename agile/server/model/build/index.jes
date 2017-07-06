@@ -13,7 +13,6 @@ class ModelBuild  {
     
     // find
     find(query, callback) {
-        console.log(query)
         build.find(Object.assign({is_delete: false},query)).limit(10).exec(callback);
     }
 
@@ -25,9 +24,9 @@ class ModelBuild  {
 
     update(params, body, callback){
         // params  = {
-        // config_id,
-        // push_id,
-        // task_id
+        //  config_id,
+        //  push_id,
+        //  task_id
         // }
         // info = {}
         build.update(params, {$push : { info } } , callback);

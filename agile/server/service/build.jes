@@ -7,14 +7,20 @@
 /* eslint-disable */
 import modelBuild from '../model/build/';
 import serviceHook from './hook';
+import serviceJenkins from './jenkins';
+import async from 'async';
 
 class serviceBuild extends modelBuild{    
     save(data, callback){
+        // 保存提交过来数据
         super.save(data, function(err, result){
-            let {task_id, config_id} = data;
-            console.log(result)
+            let {task_id, config_id, push_id } = data;
+
+            // 触发Jenkins任务
+            serviceJenkins.trigger({task_id, config_id, push_id, bid:result._id}) 
+
             serviceHook.update({
-                _id: data.push_id
+                _id: push_id
             }, {
                 $push: {
                     builds: {
@@ -24,7 +30,6 @@ class serviceBuild extends modelBuild{
                     }
                 }
             }, callback.bind(this, err, result));
-           // callback(err, result)  
         });
     }
 }
