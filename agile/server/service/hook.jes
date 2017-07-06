@@ -6,7 +6,32 @@
  */
 /* eslint-disable */
 import ModelHook from '../model/hook/'
+import async from 'async';
+import serviceBuild from './build';
+
 class ServiceHook extends ModelHook {
+    /**
+     * @desc  生写find方法
+     */
+    find(query, callback){
+        super.find(query, function(err, result){
+            async.map(result, function(item, callback){
+                async.map(item.builds,function(build, callback){
+                    let _id = build.build_id; 
+                    /**
+                     * @desc 查询编译结果
+                     */ 
+                    serviceBuild.find({ _id }, function(err, result){
+                        callback(err, result[0])
+                    });
+                },function(err, builds ){
+                    callback(err, Object.assign({},item._doc, { builds } ))
+                })
+            }, function(err, item){
+                callback(err, item) 
+            })
+        });
+    }
 }
 
 export default new ServiceHook;

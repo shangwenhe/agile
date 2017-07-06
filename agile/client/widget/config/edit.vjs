@@ -10,13 +10,13 @@
 
             <h2> 工作流基本配置 </h2>
                 <Form-item label="任务名">
-                    <i-input v-model="formItem.name" placeholder="请输入"></i-input>
+                    <i-input disabled v-model="formItem.name" placeholder="请输入"></i-input>
                 </Form-item>
 
             <h2> 流仓库配置 </h2>
                 <Form-item label="代码库">
                 
-                    <i-select placeholder="请选择" v-model="formItem.repertory">
+                    <i-select disabled placeholder="请选择" v-model="formItem.repertory">
                         <i-option v-for="(repertory, index) in mate.repertory" :value="index">{{repertory.name}} :: {{repertory.web_url}}</i-option>
                     </i-select>
                 </Form-item>
@@ -26,7 +26,7 @@
                 </Form-item>
 
                 <Form-item label="webhook">
-                    <i-input v-model="formItem.webhook" placeholder="请输入"></i-input>
+                    <i-input disabled v-model="formItem.webhook" placeholder="请输入"></i-input>
                 </Form-item>
 
             <h2> 流任务配置 </h2>
@@ -108,25 +108,32 @@
         },
         props: [],
         created(){
+            let jenkins;
             axios.get('/agile/gitlab').then((response)=>{
-                let repertory  = response.data.data;
-                axios.get('/agile/config').then((response)=>{
-                    let config = this.list = response.data.data;
-                    let exsitId = config.map(function(item, index){
-                        return item.repertory.id || false; 
-                    });
-                    this.mate.repertory = repertory.filter(function(item){
-                        return exsitId.indexOf(item.id) < 0 ;
-                    }); 
-                })
+                this.mate.repertory = response.data.data;
+            }).then(()=>{
+                axios.get('/agile/jenkins').then((response)=>{
+                    jenkins = response.data.data;
+                    this.mate.tasks = [];
+                }).then(()=>{
+                    axios.get('/agile/config',{params:{_id :this.$route.params.id}}).then((response)=>{
+                        let {name, webhook, tasks} = response.data.data[0];
+                        this.formItem.name = name;
+                        this.formItem.webhook = webhook;
+                        this.formItem.repertory = 0;
+                        this.formItem.tasks = tasks.map((item) => {
+                            this.mate.tasks.push({   
+                                value: 'Jenkins',
+                                select: jenkins 
+                            });
+                            return item._id; 
+                        });
+                    })
+                
+                });
             });
-            axios.get('/agile/jenkins').then((response)=>{
-                this.mate.tasks = [{   
-                    value: 'Jenkins',
-                    select: response.data.data
-                }];
-            });
-            console.log(this.$router)
+        },
+        mounted(){
         },
 
         methods:{
@@ -142,7 +149,6 @@
             },
             submit(){
                 let { name ,repertory, tasks, webhook}  = this.formItem;
-                console.log(repertory)
                 if(!name){
                     this.info ={
                         type:'error',
@@ -177,10 +183,9 @@
                     return;
                 }
 
-                axios.post('/agile/config', Object.assign({}, this.formItem, {
-                    repertory: this.mate.repertory[repertory]['id'],
-                    path_with_namespace: this.mate.repertory[repertory]['path_with_namespace']
-                })).then((response)=>{
+                // 更新配置中的任务
+                axios.put('/agile/config/' + this.$route.params.id , {tasks: this.formItem.tasks}).then((response)=>{
+
                     // info
                     this.info ={
                         type:'success',

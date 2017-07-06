@@ -13,6 +13,11 @@ class ModelHook {
         console.log(query);
         hook.find(query, callback);
     }
+
+    update(params, query, callback){
+        hook.update(params, query, callback);
+    }
+
     save(data, callback) {
         let addhook = new hook(Object.assign({},data,{
             pristine: JSON.stringify(data)

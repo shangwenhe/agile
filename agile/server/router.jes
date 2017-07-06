@@ -47,4 +47,6 @@ module.exports = function(router){
      * @desc config 相关的
      **/
     router.get('/config/:path_with_namespace(\\w*)', router.action('config/index').namespace);
+    router.put('/config/:_id', router.action('config/index').update);
+    router.delete('/config/:_id', router.action('config/index').delete);
 };

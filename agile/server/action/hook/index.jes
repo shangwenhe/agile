@@ -26,11 +26,12 @@ function gethookbyid(req, res){
 
     // 如果query中存在ref则使用正则表达式
     let ref  = req.query.ref && { ref : new RegExp(req.query.ref) } || {};
-
+    let time = (new Date()).valueOf();
     servicehook.find(Object.assign({project_id}, req.query , ref ), function(err, data){
         res.json({
             err, 
-            data
+            data,
+            dur:(new Date()).valueOf() - time
         })
     })    
 }

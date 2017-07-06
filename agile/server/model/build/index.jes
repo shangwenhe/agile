@@ -13,6 +13,7 @@ class ModelBuild  {
     
     // find
     find(query, callback) {
+        console.log(query)
         build.find(Object.assign({is_delete: false},query)).limit(10).exec(callback);
     }
 

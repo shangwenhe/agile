@@ -11,7 +11,7 @@ import serviceconfig from '../../service/config';
 
 function get(req, res){
 
-    serviceconfig.find({}, function(err, data){
+    serviceconfig.find(req.query, function(err, data){
         res.json({
             err, 
             data
@@ -22,10 +22,13 @@ function get(req, res){
 
 function namespace(req, res){
     let { path_with_namespace }= req.params;
+    
+    let time = (new Date()).valueOf();
     serviceconfig.find({path_with_namespace}, function(err, data){
         res.json({
             err, 
-            data
+            data,
+            dur:(new Date()).valueOf() - time
         })
     })    
 }
@@ -38,9 +41,29 @@ function post(req, res){
         })
     })
 }
+
+function deletebyid(req, res){
+    serviceconfig.delete(req.params, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+}
+
+function update(req, res){
+    serviceconfig.update(req.params, req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    })
+}
 export default {
     get, 
     post,
-    namespace
+    namespace,
+    update,
+    delete: deletebyid
 }
 /* eslint-enable */

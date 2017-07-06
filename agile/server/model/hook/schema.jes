@@ -12,6 +12,7 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
 
 /**
  * The following option keys are available:
@@ -134,9 +135,20 @@ let HOOKSCHEMA = {
             type: Number
         }
     },
+    builds: [{
+        task_id: {
+            type: ObjectId
+        },
+        config_id: {
+            type: ObjectId
+        },
+        build_id: {
+            type: ObjectId
+        },
+    }],
     pristine: {
         type: Buffer
-    }
+    },
 };
 
 let modelHookSchema = Schema(HOOKSCHEMA);

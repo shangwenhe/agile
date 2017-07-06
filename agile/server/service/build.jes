@@ -6,8 +6,27 @@
  */
 /* eslint-disable */
 import modelBuild from '../model/build/';
+import serviceHook from './hook';
 
 class serviceBuild extends modelBuild{    
+    save(data, callback){
+        super.save(data, function(err, result){
+            let {task_id, config_id} = data;
+            console.log(result)
+            serviceHook.update({
+                _id: data.push_id
+            }, {
+                $push: {
+                    builds: {
+                        task_id,
+                        config_id,
+                        build_id: result._id
+                    }
+                }
+            }, callback.bind(this, err, result));
+           // callback(err, result)  
+        });
+    }
 }
 export default new serviceBuild
 /* eslint-enable */
