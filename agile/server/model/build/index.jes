@@ -13,7 +13,7 @@ class ModelBuild  {
     
     // find
     find(query, callback) {
-        build.find(Object.assign({is_delete: false},query)).limit(10).exec(callback);
+        build.find(Object.assign({is_delete: false},query)).sort({start_time: -1}).limit(10).exec(callback);
     }
 
     // save

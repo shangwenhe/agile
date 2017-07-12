@@ -102,7 +102,6 @@
                     task_id,
                     repository: this.item.project.git_http_url,
                     branch: branch,
-                    task_status: 'progressing'
                 }).then((response)=>{
                     console.log(response.data)
                 });

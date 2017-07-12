@@ -36,7 +36,7 @@ let BUILDSCHEMA = {
     end_time: Date,
     task_status: {
         type: String,
-        default: 'unstart',
+        default: 'progressing',
     },
     is_delete: {
         type: Boolean,
