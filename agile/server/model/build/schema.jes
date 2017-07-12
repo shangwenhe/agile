@@ -26,10 +26,13 @@ let BUILDSCHEMA = {
         type: Buffer,
         default: null
     },
+    artifacts: Array,
     start_time: {
         type: Date,
         default: Date.now
     },
+    url: String,
+    number: Number,
     end_time: Date,
     task_status: {
         type: String,

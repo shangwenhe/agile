@@ -108,7 +108,6 @@
                     let { repertory, tasks, _id }= response.data.data[0];
                     this.tasklist = tasks;
                     this.configid = _id;
-
                     // hook list
                     axios.get(['/agile/hook/', repertory.id].join(""), { params: {
                         ref: branch+'$'

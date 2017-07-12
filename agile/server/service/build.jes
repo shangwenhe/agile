@@ -21,7 +21,7 @@ class serviceBuild extends modelBuild{
             let {task_id, config_id, push_id } = data;
             
             // 触发Jenkins任务
-            serviceJenkins.trigger(Object.assign({},data,{ build_id:result._id})) 
+            serviceJenkins.trigger(Object.assign({},data,{ user_build_id:result._id})) 
 
             serviceHook.update({
                 _id: push_id

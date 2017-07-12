@@ -59,49 +59,29 @@ class ServiceJenkins extends ModelJenkins {
             (callback) => {
                 let curl = new Curl(this.conf.user);
                 curl.get(data.url + 'api/json', (err, data) => {
-                    // 取出所有具有parameters 属性的字段，对字段进行合并去空
-                    // [ { _class: 'hudson.model.StringParameterValue',
-                    // name: 'cid',
-                    // value: '596327eb087c98727d02415e' },
-                    // { _class: 'hudson.model.StringParameterValue',
-                    // name: 'tid',
-                    // value: '5963341243d9f18007c0b11d' },
-                    // { _class: 'hudson.model.StringParameterValue',
-                    // name: 'pid',
-                    // value: '59632c806d8b55784962447b' } ]
 
                     let parameters = [].concat.apply([], data.actions.map(item => item.parameters)).filter(item => item);
                     let parameterObj = {};
                     parameters.map(function(item) {
                         parameterObj[item.name] = item.value;
                     });
-                    callback(err, Object.assign(parameterObj, {result: data.result}))
+                    callback(err, Object.assign(parameterObj, data, {
+                        result: data.result
+                    }))
                 });
+
             }, (parameterObj, callback) => {
-                // 如果已经失败就不用再去取得结果了
-                if(parameterObj.result === 'FAILURE'){
-                    callback(null, parameterObj);
-                    return; 
-                }
-                super.findOne({
-                    _id: parameterObj['task_id']
-                }, (err, data) => {
-                    let curl = new Curl(this.conf.user);
-                    curl.get(
-                        data.url + 'ws/result.json',
-                        function(err, data) {
-                            console.log(data)
-                            callback(err, Object.assign({}, parameterObj, data));
-                        }
-                    );
-                });
-            }, (parameterObj, callback) => {
+                // 更新编译结果
+                console.log('\n\n\n\n\n', parameterObj, '\n\n\n\n\n')            
                 serviceBuild.update({
-                    _id: parameterObj['build_id']
+                    _id: parameterObj['user_build_id']
                 }, {
                     result: new Buffer(JSON.stringify(parameterObj)),
+                    artifacts: parameterObj.artifacts,
                     task_status: parameterObj.result,
-                    end_time: Date.now()
+                    end_time: Date.now(),
+                    url: parameterObj.url,
+                    number: parameterObj.number,
                 }, callback)
 
             }
