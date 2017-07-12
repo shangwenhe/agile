@@ -10,8 +10,8 @@ let { hook } = schema;
 
 class ModelHook {
     find(query, callback) {
-        console.log(query);
-        hook.find(query, callback);
+        // hook.find(query, callback);
+        hook.find(query).sort({create_time: -1}).exec(callback);
     }
 
     update(params, query, callback){

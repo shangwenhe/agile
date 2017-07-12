@@ -72,7 +72,7 @@ fis.match('*', {
     optimizer: null,
     useHash: false,
     deploy: fis.plugin('http-push', {
-        receiver: 'http://180.76.248.110:8077/yog/upload',
+        receiver: 'http://agile.xiaodutv.com/yog/upload',
         to: '/'
     })
 });

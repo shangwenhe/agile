@@ -23,13 +23,8 @@ class ModelBuild  {
     }
 
     update(params, body, callback){
-        // params  = {
-        //  config_id,
-        //  push_id,
-        //  task_id
-        // }
-        // info = {}
-        build.update(params, {$push : { info } } , callback);
+        console.log(params, body)
+        build.update(params, {$set: body } , callback);
     }
 
     updatestate(id, state, callback){

@@ -22,33 +22,18 @@ let BUILDSCHEMA = {
         type: ObjectId,
         require: true
     },
-    info: [{
-            status: String,
-            result: Buffer,
-            start_time: {
-                type: Date,
-                default: Date.now
-            },
-            end_time: {
-                type: Date,
-                default: (new Date('2017-01-01 00:00:00')).valueOf()
-            }
-        }
-
-    ],
-    // info[0] = {
-    //      status
-    //      result
-    //      start_time
-    //      end_time
-    // }
-    create_time: {
+    result: {
+        type: Buffer,
+        default: null
+    },
+    start_time: {
         type: Date,
         default: Date.now
     },
+    end_time: Date,
     task_status: {
-        type: Boolean,
-        default: false,
+        type: String,
+        default: 'unstart',
     },
     is_delete: {
         type: Boolean,

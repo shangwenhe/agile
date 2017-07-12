@@ -18,6 +18,9 @@ let JENKINSSCHEMA = {
     url: {
         type: String
     },
+    jenkinsFullName: {
+        type: String
+    },
     is_delete:{
         type: Boolean,
         default: false,

@@ -149,6 +149,10 @@ let HOOKSCHEMA = {
     pristine: {
         type: Buffer
     },
+    create_time:{
+        type: Date,
+        default: Date.now
+    }
 };
 
 let modelHookSchema = Schema(HOOKSCHEMA);

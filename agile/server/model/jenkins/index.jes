@@ -10,9 +10,15 @@ let { jenkins } = schema;
 
 
 class ModelJenkins  {
+
     find(query, callback) {
         jenkins.find(Object.assign({is_delete: false}, query), callback);
     }
+
+    findOne(query, callback) {
+        jenkins.findOne(Object.assign({is_delete: false}, query), callback);
+    }
+
     save(data, callback) {
         let addjenkins = new jenkins(Object.assign({},data));
         addjenkins.save(callback);
@@ -21,6 +27,10 @@ class ModelJenkins  {
         let is_delete = body.is_delete || true;
         jenkins.update(id, {$set : { is_delete }} , callback);
     }
+    update(id, body, callback){
+        jenkins.update(id, {$set : body } , callback);
+    }
+    
 }
 export default ModelJenkins;
 /* eslint-enable */

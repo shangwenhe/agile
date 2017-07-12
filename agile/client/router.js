@@ -12,6 +12,10 @@
         name: 'jenkins',
         component: jenkins
     }, {
+        path: '/jenkins/:id',
+        name: 'jenkins/edit',
+        component: jenkins
+    }, {
         path: '/build/:path+@:branch(\\w+)',
         name: 'build',
         component: build

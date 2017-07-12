@@ -14,6 +14,9 @@
                     <i-option v-for="(job,index) in jobs" :value="index" :key="index" >{{job.name}}: {{job.url}}</i-option>
                 </i-select>
             </Form-item>
+            <Form-item label="Jenkins全名">
+                <i-input disabled v-model="formItem.jenkinsFullName" placeholder="请输入"></i-input>
+            </Form-item>
             <Form-item label="任务别名">
                 <i-input v-model="formItem.taskname" placeholder="请输入"></i-input>
             </Form-item>
@@ -25,15 +28,17 @@
         <div class='tasklist'>
         <h2> 任务列表 </h2>
             <Row class='title'>
-                <i-col span='6'>任务名字 </i-col>
-                <i-col span='6'>任务别名 </i-col>
-                <i-col span='10'>任务地址 </i-col>
+                <i-col span='5'>任务名字 </i-col>
+                <i-col span='5'>任务别名 </i-col>
+                <i-col span='5'>任务别名 </i-col>
+                <i-col span='7'>任务地址 </i-col>
                 <i-col span='2'>操作 </i-col>
             </Row>
             <Row v-for='(item, index) in list'>
-                <i-col span='6'>{{item.name}}</i-col>
-                <i-col span='6'>{{item.taskname}}</i-col>
-                <i-col span='10'><a target='_blank' :href='item.url'>{{item.url}}</a></i-col>
+                <i-col span='5'>{{item.name}}</i-col>
+                <i-col span='5'>{{item.taskname}}</i-col>
+                <i-col span='5'>{{item.jenkinsFullName || 'jenkinsFullName'}}</i-col>
+                <i-col span='7'><a target='_blank' :href='item.url'>{{item.url}}</a></i-col>
                 <i-col span='2'>
                     <i-button type="dashed" @click='taskedit(index, item._id)'>编辑</i-button>
                     <i-button type="text" @click='deltask(index, item._id)' icon='trash-a'></i-button>
@@ -74,6 +79,7 @@
             return {
                 formItem:{
                     taskname: '',
+                    jenkinsFullName: '',
                     job: ''
                 },
                 jobs: [],
@@ -99,26 +105,31 @@
                     title: '成功',
                     message: '获取jenkins任务列表'
                 }
+                let id = this.$route.params.id;
+                id && this.getTaskById(id); 
+
             });
             axios.get('/agile/jenkins').then((response) => {
                 if(response.data.err){
                     return;
                 }
-                
                 this.list = response.data &&  response.data.data;
-                
             });
-        
+
         },
         components: { },
         watch:{
-            'formItem.job'(nval, oval){
-                console.log(nval, oval) 
+            'formItem.job'(nvar, ovar){
+                this.jobs[nvar] &&  this.getJenkinsFullName(this.jobs[nvar]);
+            },
+            '$route'(nvar, ovar){
+                let id = this.$route.params.id;
+                id && this.getTaskById(id); 
             }
         },
         methods:{
             submit(){
-                let {taskname, job} = this.formItem;
+                let {taskname, job, jenkinsFullName} = this.formItem;
 
                 if(!taskname){
                     this.info ={
@@ -137,20 +148,53 @@
                     return;
                 }
                 this.formItem ={};
-                let result = Object.assign({}, this.jobs[job], { taskname, _class: undefined }  )
+                let result = Object.assign({}, this.jobs[job], { jenkinsFullName, taskname, _class: undefined }  )
                 delete result._class;
-                axios.post('/agile/jenkins', result).then((response) => {
-                    this.list.push(response.data.data);
-                });
+                
+                let id = this.$route.params.id;
+                if(id){
+                    axios.put('/agile/jenkins/'+id, result).then((response) => {
+                        this.list.push(response.data.data);
+                    });
+                }else{
+                    axios.post('/agile/jenkins', result).then((response) => {
+                        this.list.push(response.data.data);
+                    });
+                
+                }
+
 
             },
             taskedit(index, id){
-                console.log(index, id)
+                this.$router.push({ path: '/jenkins/'+ id})
+            },
+            getJenkinsFullName( url ){
+                axios.get('/agile/jenkins/fullname', {params: url }).then((response)=>{
+                    this.formItem.jenkinsFullName = response.data && response.data.data.fullName || 'jenkinsFullName';
+
+                });
             },
             deltask(index, id){
                 axios.delete('/agile/jenkins/'+ id , { data: {is_delete: true}} ).then((response) => {
                     this.list.splice(index, 1);
                 });
+            },
+            getTaskById(_id){
+                axios.get('/agile/jenkins',{ params: { _id } }).then((response)=>{
+                    let jenkins = response.data.data[0];
+                    let job = 0;
+                    this.jobs.find(function(item, index){
+                        job = index;
+                        return item.url == jenkins.url;
+                    });
+                    let {taskname, jenkinsFullName} = jenkins;
+                    this.formItem = {
+                        taskname,
+                        jenkinsFullName,
+                        job
+                    };
+                })
+            
             }
         }
     }

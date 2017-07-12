@@ -34,7 +34,9 @@ module.exports = function(router){
      **/
     router.get('/jenkins/remote', router.action('jenkins/index').remote);
     router.delete('/jenkins/:_id', router.action('jenkins/index').delete);
+    router.put('/jenkins/:_id', router.action('jenkins/index').update);
     router.post('/jenkins/buildResult', router.action('jenkins/index').buildResult);
+    router.get('/jenkins/fullname', router.action('jenkins/index').fullname);
     
 
     /**

@@ -14,12 +14,13 @@ class ServiceGitlab {
             // 接口会进行用户认证如果用户没有权限则 403 
             
             // git.xiaodutv.com TOKEN
-            // header: '--header \"PRIVATE-TOKEN: c1a3FEdr-LRkiiWKXKJw\"',
+            header: '--header \"PRIVATE-TOKEN: c1a3FEdr-LRkiiWKXKJw\"',
 
             // sandbox.git.xiaodutv.com TOKEN
-            header: '--header \"PRIVATE-TOKEN: rdRC9_AxFNvwfj2BQRVv\"',
+            // header: '--header \"PRIVATE-TOKEN: rdRC9_AxFNvwfj2BQRVv\"',
         }
-        this.githost = 'http://sandbox.git.xiaodutv.com';
+        // this.githost = 'http://sandbox.git.xiaodutv.com';
+        this.githost = 'http://git.xiaodutv.com';
         this.gitapi = this.githost + '/api/v3'
     }
 

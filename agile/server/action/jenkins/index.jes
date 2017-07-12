@@ -10,16 +10,30 @@
 import serviceJenkins from '../../service/jenkins';
 
 function get(req, res){
-    serviceJenkins.find(null, function(err, data){
+    serviceJenkins.find(req.query || {}, function(err, data){
         res.json({
             err, 
             data
         })
     })    
 }
-
+/**
+ * @desc 存放数据
+ */
 function post(req, res){
     serviceJenkins.save(req.body, function(err, data){
+        res.json({
+            err, 
+            data
+        })
+    });
+}
+/**
+ * @desc update
+ */
+function update(req, res){
+    let { params, body } =  req;
+    serviceJenkins.update(params, body, function(err, data){
         res.json({
             err, 
             data
@@ -61,12 +75,22 @@ function buildResult(req, res){
     });
 }
 
+function fullname(req, res){
+    serviceJenkins.fullname(req.query, function(err, data){
+        res.json({
+            err,
+            data
+        });
+    });
+}
 
 export default {
     get, 
     remote,
     post,
+    update,
     delete: deleted,
-    buildResult
+    buildResult,
+    fullname
 }
 /* eslint-enable */
