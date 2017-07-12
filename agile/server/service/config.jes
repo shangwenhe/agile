@@ -32,7 +32,6 @@ class ServiceConfig extends ModelConfig {
                          * @desc 展开tasks 对应的ID
                          */ 
                         async.map(result.tasks, function(item, callback){
-                           console.log(item) 
                             serviceJenkins.find({_id: item}, function(err, result){
                                 callback(err, result[0])
                             })

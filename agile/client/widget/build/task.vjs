@@ -17,6 +17,12 @@
                    <i-button type="success" shape="circle" @click='build(item._id, task._id, configid)'> 执行 </i-button>
                </div>
         </div>
+        <Modal 
+            v-if="task.name === 'FECodeRelease'"
+            v-model="version"
+            title="正在发布版本" >
+            <p>版本号：{{version}}</p>
+        </Modal>
     </div>
 </template>
 <style lang='less'>
@@ -78,13 +84,13 @@
                 item: {},
                 configid: '',
                 info: false,
-                state: ''
+                state: '',
+                version: false
             }
         },
         props: ['task', 'item', 'configid'],
         watch:{ },
         created(){
-
             // this.item.builds 按时间倒序排列
             this.info = this.item.builds.filter((item, index) => {
                 return this.task._id === item.task_id; 
@@ -92,7 +98,14 @@
             this.state = this.info &&  this.info.task_status || '' ;
         },
         methods:{ 
-            build(push_id, task_id, config_id){
+            build(...arg){
+                if(this.task.name === 'FECodeRelease'){
+                    this.codeRelease.apply(this, arg);
+                }else{
+                    this.codeBuild.apply(this, arg);
+                }
+            },
+            codeBuild(push_id, task_id, config_id){
                 let {branch, path } = this.$route.params;
                 axios.post('agile/build',{
                     config_id,
@@ -107,9 +120,11 @@
                        end_time: ''
                     };
                     this.state = this.info.task_status;
-                    console.log(this.info)
-                    console.log(response.data)
                 });
+            
+            },
+            codeRelease(push_id, task_id, config_id){
+                this.codeBuild.call(this, push_id, task_id, config_id);
             }
         },
         components: { }

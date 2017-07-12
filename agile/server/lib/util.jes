@@ -1,2 +1,39 @@
-module.exports = {
+
+
+/**
+ * @desc 对比两个版本的大小
+ */
+function compareVersion(v1, v2) {
+    var _v1 = v1.match(/\d+/g),
+        _v2 = v2.match(/\d+/g),
+        _r = _v1[0] - _v2[0];
+    return _r == 0 && v1 != v2 ? compareVersion(_v1.splice(1).join("."), _v2.splice(1).join(".")) : _r;
 };
+
+/**
+ * @desc 取出最大的版本号
+ */
+function getMaxVersion(versions){
+    return versions.sort(function(v1, v2){
+        compareVersion(v1.name, v2.name);
+    });
+}
+
+/**
+ * @desc 取出下一个版本号
+ */
+function getNextVersion(version){
+    let V4 = version.match(/\d+/g);
+    let next = parseInt(V4.pop()) + 1;
+    if( next  === 100 ){
+       return [ getNextVersion(V4.join('.')) , 0 ] .join('.');
+    }else{
+        V4.push(next)
+        return V4.join('.');
+    }
+};
+export default {
+    compareVersion,
+    getMaxVersion,
+    getNextVersion
+}

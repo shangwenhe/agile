@@ -52,4 +52,8 @@ module.exports = function(router){
     router.get('/config/:path_with_namespace(\\w*)', router.action('config/index').namespace);
     router.put('/config/:_id', router.action('config/index').update);
     router.delete('/config/:_id', router.action('config/index').delete);
+
+    // 发布时更新tag 
+    router.put('/release/:_id', router.action('release/index').update);
+
 };

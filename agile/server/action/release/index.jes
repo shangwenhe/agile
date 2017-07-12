@@ -1,0 +1,34 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-07-12
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+'use strict';
+
+import serviceRelease from '../../service/release';
+
+function get(req, res) {
+    serviceRelease.find(req.query, function(err, data) {
+        res.json({
+            err,
+            data
+        })
+    })
+}
+
+function update(req, res) {
+    serviceRelease.update(req.params, req.body, function(err, data) {
+        res.json({
+            err,
+            data
+        })
+    })
+}
+export default {
+    get,
+    update
+}
+
+/* eslint-enable */

@@ -11,15 +11,15 @@ class ServiceGitlab {
 
     constructor() {
         this.conf = {
-            // 接口会进行用户认证如果用户没有权限则 403 
-            
-            // git.xiaodutv.com TOKEN
-            header: '--header \"PRIVATE-TOKEN: c1a3FEdr-LRkiiWKXKJw\"',
+                // 接口会进行用户认证如果用户没有权限则 403 
 
-            // sandbox.git.xiaodutv.com TOKEN
-            // header: '--header \"PRIVATE-TOKEN: rdRC9_AxFNvwfj2BQRVv\"',
-        }
-        // this.githost = 'http://sandbox.git.xiaodutv.com';
+                // git.xiaodutv.com TOKEN
+                header: '--header \"PRIVATE-TOKEN: c1a3FEdr-LRkiiWKXKJw\"',
+
+                // sandbox.git.xiaodutv.com TOKEN
+                // header: '--header \"PRIVATE-TOKEN: rdRC9_AxFNvwfj2BQRVv\"',
+            }
+            // this.githost = 'http://sandbox.git.xiaodutv.com';
         this.githost = 'http://git.xiaodutv.com';
         this.gitapi = this.githost + '/api/v3'
     }
@@ -29,20 +29,22 @@ class ServiceGitlab {
      * @desc http://git.xiaodutv.com/help/api/projects.md#list-all-projects
      */
     list(query, callback) {
-        let curl = new Curl( this.conf.header );
-        curl.get(
-            this.gitapi + '/projects/',
-            callback
-        );
-    }
-    /**
-     * @desc 取得所有仓库
-     * @desc http://git.xiaodutv.com/help/api/projects.md#list-all-projects
-     */
+            let curl = new Curl(this.conf.header);
+            curl.get(
+                this.gitapi + '/projects/',
+                callback
+            );
+        }
+        /**
+         * @desc 取得所有仓库
+         * @desc http://git.xiaodutv.com/help/api/projects.md#list-all-projects
+         */
     findbyid(query, callback) {
-        
-        let curl = new Curl( this.conf.header );
-        let { id } = query;
+
+        let curl = new Curl(this.conf.header);
+        let {
+            id
+        } = query;
         curl.get(
             this.gitapi + '/projects/' + id,
             callback
@@ -50,8 +52,8 @@ class ServiceGitlab {
     }
 
     /**
-     * @desc http://git.xiaodutv.com/help/api/projects.md#add-project-hook 
-     * @params body 
+     * @desc http://git.xiaodutv.com/help/api/projects.md#add-project-hook
+     * @params body
      *      id (required) - The ID or NAMESPACE/PROJECT_NAME of a project
      *      url (required) - The hook URL
      *      push_events - Trigger hook on push events
@@ -60,21 +62,21 @@ class ServiceGitlab {
      *      tag_push_events - Trigger hook on push_tag events
      *      note_events - Trigger hook on note events
      *      enable_ssl_verification - Do SSL verification when triggering the hook
-     *  @testcmd 
+     *  @testcmd
      *  curl -X POST --header "PRIVATE-TOKEN: c1a3FEdr-LRkiiWKXKJw"  \
      *  --header "Content-Type: application/json"  \
      *  --data '{"id":22,"url":"http://sandbox.git.xiaodutv.com:8077/agile/hook"}' \
      *  http://git.xiaodutv.com/api/v3/projects/22/hooks
      */
 
-    addhook(params, body, callback){
+    addhook(params, body, callback) {
 
         let contentType = '--header  \"Content-Type: application/json\"';
         let urlencode = '--data \'' + JSON.stringify(body) + '\'';
         let id = params.id;
-        let curl = new Curl( contentType, this.conf.header, urlencode );
+        let curl = new Curl(contentType, this.conf.header, urlencode);
         curl.post(
-            this.gitapi + '/projects/'+ id +'/hooks',
+            this.gitapi + '/projects/' + id + '/hooks',
             callback
         );
     }
@@ -82,17 +84,45 @@ class ServiceGitlab {
     /**
      * @desc http://git.xiaodutv.com/help/api/projects.md#hooks
      */
-    hook(params, callback){
-        
-        let curl = new Curl( this.conf.header );
+    hook(params, callback) {
+
+        let curl = new Curl(this.conf.header);
         let id = params.id;
         curl.get(
-            this.gitapi + '/projects/'+ id +'/hooks',
+            this.gitapi + '/projects/' + id + '/hooks',
             callback
         );
         // callback(null, params);
     }
 
+
+    /**
+     * @desc 为代码库添加TAG
+     * @discribe  http://git.xiaodutv.com/help/api/tags.md#create-a-new-tag
+     */
+    saveTag(body, callback) {
+        let contentType = '--header  \"Content-Type: application/json\"';
+        let urlencode = '--data \'' + JSON.stringify(body) + '\'';
+        let curl = new Curl(contentType, this.conf.header, urlencode);
+        curl.post(
+            this.gitapi + '/projects/' + body.id + '/repository/tags',
+            callback
+        );
+    }
+
+    /**
+     * @desc 代码库取出TAG list
+     * @describe http://git.xiaodutv.com/help/api/tags.md#tags
+     */
+    getTag(id, callback) {
+        let curl = new Curl(this.conf.header);
+        curl.get(
+            this.gitapi + '/projects/' + id + '/repository/tags',
+            callback
+        )
+    }
+
+    // 写入数据
     save(query, callback) {
         callback(null, query)
     }

@@ -1,0 +1,55 @@
+/**
+ * @file: release.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-07-12
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+import ServiceHook from './hook';
+import ServiceGitlab from './gitlab';
+import serviceBuild from './build';
+import util  from '../lib/util';
+import async from 'async';
+
+class ServiceRelease {
+    update(params, body, callback) {
+        async.waterfall([
+            (callback) => {
+                ServiceHook.find({_id: body.push_id}, function(err, hooks){
+                    callback(err, hooks.shift())
+                })
+            },(hook, callback) =>{
+                ServiceGitlab.getTag(hook.project_id, function(err, tags){
+                    let maxVersion = tags.sort(function(v1, v2){
+                        return util.compareVersion(v1.name, v2.name);
+                    }).pop() || [] ;
+                    let nextVersion = util.getNextVersion(maxVersion.name || '0.0.0.0');
+                    callback(err, Object.assign({}, hook, {nextVersion} ));
+                });
+            },(hook, callback) =>{
+                // 为仓库添加TAG
+                let {checkout_sha, project_id, nextVersion} = hook;
+                ServiceGitlab.saveTag({
+                    ref: checkout_sha, 
+                    id: project_id, 
+                    tag_name: nextVersion,
+                    message: body.BUILD_URL
+                },function(err, data){
+                    callback(err, Object.assign({},hook, {version: data.name }));
+                })
+            },({version}, callback) =>{
+                serviceBuild.update(params, {
+                    version
+                }, callback)
+                // 为仓库添加TAG
+            }
+        ], callback);
+    }
+    find(query, callback) {
+        callback(null, query)
+    }
+};
+export
+default new ServiceRelease;
+/* eslint-enable */

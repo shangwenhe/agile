@@ -65,6 +65,7 @@ class ServiceJenkins extends ModelJenkins {
                     parameters.map(function(item) {
                         parameterObj[item.name] = item.value;
                     });
+                    console.log('\n\n\n\n\n\n',data,parameterObj,'\n\n\n\n\n\n');
                     callback(err, Object.assign(parameterObj, data, {
                         result: data.result
                     }))
@@ -72,7 +73,6 @@ class ServiceJenkins extends ModelJenkins {
 
             }, (parameterObj, callback) => {
                 // 更新编译结果
-                console.log('\n\n\n\n\n', parameterObj, '\n\n\n\n\n')            
                 serviceBuild.update({
                     _id: parameterObj['user_build_id']
                 }, {
@@ -85,12 +85,7 @@ class ServiceJenkins extends ModelJenkins {
                 }, callback)
 
             }
-        ], callback)
-
-
-
-
-
+        ], callback);
     }
     list(view, callback) {
         let curl = new Curl(this.conf.user);

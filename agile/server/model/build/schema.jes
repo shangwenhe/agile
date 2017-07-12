@@ -38,6 +38,7 @@ let BUILDSCHEMA = {
         type: String,
         default: 'progressing',
     },
+    version: String,
     is_delete: {
         type: Boolean,
         default: false,
