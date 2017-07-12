@@ -43,7 +43,7 @@ function post(req, res){
 }
 
 function deletebyid(req, res){
-    serviceconfig.delete(req.params, function(err, data){
+    serviceconfig.delete(req.params, req.body, function(err, data){
         res.json({
             err, 
             data

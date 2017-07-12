@@ -26,7 +26,7 @@
                 </Form-item>
 
                 <Form-item label="webhook">
-                    <i-input disabled v-model="formItem.webhook" placeholder="请输入"></i-input>
+                    <i-input v-model="formItem.webhook" placeholder="请输入"></i-input>
                 </Form-item>
 
             <h2> 流任务配置 </h2>
@@ -93,7 +93,7 @@
                 },
                 formItem:{
                     name: '',
-                    webhook: 'http://sandbox.git.xiaodutv.com:8077/agile/hook',
+                    webhook: 'http://agile.xiaodutv.com/hook',
                     repertory: '',
                     tasks: []
                 },
@@ -184,7 +184,7 @@
                 }
 
                 // 更新配置中的任务
-                axios.put('/agile/config/' + this.$route.params.id , {tasks: this.formItem.tasks}).then((response)=>{
+                axios.put('/agile/config/' + this.$route.params.id , {tasks: this.formItem.tasks, webhook}).then((response)=>{
 
                     // info
                     this.info ={
@@ -195,7 +195,7 @@
                     // 重置数据
                     this.formItem ={
                         name: '',
-                        webhook: 'http://sandbox.git.xiaodutv.com:8077/agile/hook',
+                        webhook: 'http://agile.xiaodutv.com/hook',
                         repertory: '',
                         tasks: []
                     };

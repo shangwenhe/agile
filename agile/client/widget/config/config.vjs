@@ -128,7 +128,7 @@
                 },
                 formItem:{
                     name: '',
-                    webhook: 'http://sandbox.git.xiaodutv.com:8077/agile/hook',
+                    webhook: 'http://agile.xiaodutv.com/hook',
                     repertory: '',
                     tasks: []
                 },
@@ -223,7 +223,7 @@
                     // 重置数据
                     this.formItem ={
                         name: '',
-                        webhook: 'http://sandbox.git.xiaodutv.com:8077/agile/hook',
+                        webhook: 'http://agile.xiaodutv.com/hook',
                         repertory: '',
                         tasks: []
                     };
@@ -238,7 +238,9 @@
                 this.$router.push({ path: '/config/'+ id})
             },
             delconfig(index,id ){
-                console.log(index, id, 'del');
+                   axios.delete('/agile/config/'+ id ).then((response)=> {
+                        console.log(response)
+                   });
             }
         },
         watch:{
