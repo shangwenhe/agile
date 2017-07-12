@@ -68,11 +68,18 @@ fis.match('server/(plugins/**)', {
     release: '$1'
 });
 
-fis.match('*', {
+fis.media('agile').match('*', {
     optimizer: null,
     useHash: false,
     deploy: fis.plugin('http-push', {
         receiver: 'http://agile.xiaodutv.com/yog/upload',
         to: '/'
+    })
+});
+fis.media('output').match('*', {
+    optimizer: null,
+    useHash: false,
+    deploy: fis.plugin('local-deliver', {
+        to: './output'
     })
 });
