@@ -76,6 +76,8 @@ fis.media('agile').match('*', {
         to: '/'
     })
 });
+
+// output 
 fis.media('output').match('*', {
     optimizer: null,
     useHash: false,
