@@ -14,7 +14,12 @@
   "author": "fis@baidu.com",
   "license": "BSD",
   "dependencies": {
+    "async": "^2.5.0",
+    "bluebird": "^3.5.0",
     "debuglog": "1.0.1",
+    "gb": "0.0.3",
+    "mongoose": "^4.10.8",
+    "pg": "^6.3.1",
     "yog2-kernel": "1.8.1"
   }
 }
