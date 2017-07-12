@@ -89,12 +89,10 @@
             this.info = this.item.builds.filter((item, index) => {
                 return this.task._id === item.task_id; 
             }).pop();
-
             this.state = this.info &&  this.info.task_status || '' ;
         },
         methods:{ 
             build(push_id, task_id, config_id){
-
                 let {branch, path } = this.$route.params;
                 axios.post('agile/build',{
                     config_id,
@@ -103,6 +101,13 @@
                     repository: this.item.project.git_http_url,
                     branch: branch,
                 }).then((response)=>{
+                    this.info  = {
+                       task_status : 'progressing',
+                       start_time:  new Date(),
+                       end_time: ''
+                    };
+                    this.state = this.info.task_status;
+                    console.log(this.info)
                     console.log(response.data)
                 });
             }
