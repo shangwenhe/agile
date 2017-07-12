@@ -32,5 +32,4 @@
         name: 'home',
         component: home
     }];
-
     exports.routes = routes;
