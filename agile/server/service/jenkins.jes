@@ -9,6 +9,7 @@
 import Curl from '../lib/curl';
 import ModelJenkins from '../model/jenkins/';
 import serviceBuild from './build';
+import ServiceHook from './hook';
 import async from 'async';
 
 class ServiceJenkins extends ModelJenkins {
@@ -65,7 +66,6 @@ class ServiceJenkins extends ModelJenkins {
                     parameters.map(function(item) {
                         parameterObj[item.name] = item.value;
                     });
-                    console.log('\n\n\n\n\n\n',data,parameterObj,'\n\n\n\n\n\n');
                     callback(err, Object.assign(parameterObj, data, {
                         result: data.result
                     }))
@@ -82,8 +82,21 @@ class ServiceJenkins extends ModelJenkins {
                     end_time: Date.now(),
                     url: parameterObj.url,
                     number: parameterObj.number,
+                }, function(err){
+                    callback(err, parameterObj.artifacts.map(function(item){
+                        let tarUrl =  parameterObj.url + 'artifact/' + item.relativePath;
+                        return Object.assign({}, item, { tarUrl })
+                    }), parameterObj['push_id']);
+                })
+            },(artifacts, push_id, callback)=>{
+                // 为hook更新数据
+                ServiceHook.update({
+                    _id: push_id
+                }, {
+                    $pushAll: {
+                        artifacts  
+                    }
                 }, callback)
-
             }
         ], callback);
     }

@@ -149,6 +149,8 @@ let HOOKSCHEMA = {
     pristine: {
         type: Buffer
     },
+    version: String,
+    artifacts: Array,
     create_time:{
         type: Date,
         default: Date.now

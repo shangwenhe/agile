@@ -9,9 +9,12 @@
                    PUSHID {{item._id}}
                </p>
                 <div v-if='info'>
-                    <p><Icon type="clock">start</Icon>  {{ info.start_time }}</p>
-                    <p><Icon type="clock">end</Icon> {{ info.end_time }}</p>
+                    <p><Icon type="clock">start</Icon>  {{ duration  }}</p>
                     <p><Icon type="stats-bars"></Icon> {{ info.task_status }}</p>
+                    <p v-if='info.version'><Icon type="ios-calendar"></Icon> {{ info.version}}</p>
+                    <p v-for='artifact in info.artifacts'>
+                        <Icon type="locked"></Icon> <a :href='info.url +"artifact/"+ artifact.relativePath'> {{ artifact.fileName }}</a>
+                    </p>
                 </div>
                 <div v-if='!info'>
                    <i-button type="success" shape="circle" @click='build(item._id, task._id, configid)'> 执行 </i-button>
@@ -77,6 +80,7 @@
 </style>
 <script type='text/javascript'>
     import axios  from '../static/lib/ajax/axios.js';
+    let moment = require('agile:static/lib/moment/moment.min.js');
     export default{
         data(){
             return {
@@ -125,6 +129,18 @@
             },
             codeRelease(push_id, task_id, config_id){
                 this.codeBuild.call(this, push_id, task_id, config_id);
+            }
+        },
+        computed:{
+            duration(){
+                let end_time;
+                if( !this.info.end_time){
+                    end_time = (new Date()).valueOf()
+                }else{
+                    end_time = (new Date(this.info.end_time)).valueOf()
+                }
+                let dur = end_time - (new Date(this.info.start_time) ).valueOf();
+                return parseInt(dur/1000) + 's'
             }
         },
         components: { }

@@ -9,40 +9,60 @@
 import ServiceHook from './hook';
 import ServiceGitlab from './gitlab';
 import serviceBuild from './build';
-import util  from '../lib/util';
+import util from '../lib/util';
 import async from 'async';
 
 class ServiceRelease {
     update(params, body, callback) {
         async.waterfall([
             (callback) => {
-                ServiceHook.find({_id: body.push_id}, function(err, hooks){
+                ServiceHook.find({
+                    _id: body.push_id
+                }, function(err, hooks) {
                     callback(err, hooks.shift())
                 })
-            },(hook, callback) =>{
-                ServiceGitlab.getTag(hook.project_id, function(err, tags){
-                    let maxVersion = tags.sort(function(v1, v2){
+            }, (hook, callback) => {
+                ServiceGitlab.getTag(hook.project_id, function(err, tags) {
+                    let maxVersion = tags.sort(function(v1, v2) {
                         return util.compareVersion(v1.name, v2.name);
-                    }).pop() || [] ;
+                    }).pop() || [];
                     let nextVersion = util.getNextVersion(maxVersion.name || '0.0.0.0');
-                    callback(err, Object.assign({}, hook, {nextVersion} ));
+                    callback(err, Object.assign({}, hook, {
+                        nextVersion
+                    }));
                 });
-            },(hook, callback) =>{
+            }, (hook, callback) => {
                 // 为仓库添加TAG
-                let {checkout_sha, project_id, nextVersion} = hook;
+                let {
+                    checkout_sha, project_id, nextVersion
+                } = hook;
                 ServiceGitlab.saveTag({
-                    ref: checkout_sha, 
-                    id: project_id, 
+                    ref: checkout_sha,
+                    id: project_id,
                     tag_name: nextVersion,
                     message: body.BUILD_URL
-                },function(err, data){
-                    callback(err, Object.assign({},hook, {version: data.name }));
+                }, function(err, data) {
+                    callback(err, Object.assign({}, hook, {
+                        version: data.name
+                    }));
                 })
-            },({version}, callback) =>{
+            }, ({ version }, callback) => {
+                // 更新build数据
                 serviceBuild.update(params, {
-                    version
+                        version
+                    }, function(err, data) {
+                        callback(err, version)
+                    })
+                    // 为仓库添加TAG
+            }, (version, callback) =>{
+                // 为hook更新数据
+                ServiceHook.update({
+                    _id: body.push_id
+                }, {
+                    $set: {
+                        version
+                    }
                 }, callback)
-                // 为仓库添加TAG
             }
         ], callback);
     }
