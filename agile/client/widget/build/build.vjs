@@ -8,12 +8,13 @@
             <div class='buildlist' v-for='(item, index) in list'>
                <div class='autoflex'>
                 <div class='flex'>
+                    <h3>基础信息</h3>
                     <Row class='userinfo'>
                         <i-col span='12'>
                             <Icon type="fork-repo"></Icon> {{item.checkout_sha.replace(/^(.{8}).*$/,'$1')}}
                         </i-col>
                         <i-col span='12'>
-                            <Icon type="ios-speedometer-outline"></Icon> {{(new Date(item.commits[0]['timestamp'])).toLocaleString() }}
+                            <Icon type="ios-speedometer-outline"></Icon> {{  createTime(item.create_time) }}
                         </i-col>
                     </Row>
                     <Row class='userinfo'>
@@ -21,7 +22,7 @@
                             <Icon type="code-working"></Icon> {{item.user_email}}
                         </i-col>
                         <i-col span='12'>
-                            <Icon type="ios-chatboxes-outline"></Icon> {{ item.message || item.commits[0]['message']}}
+                            <Icon type="ios-chatboxes-outline"></Icon> {{ item.message || item.commits[0]  &&  item.commits[0]['message'] || ''}}
                         </i-col>
                     </Row>
                 </div>
@@ -77,6 +78,7 @@
 </style>
 <script type='text/javascript'>
     import axios  from '../static/lib/ajax/axios.js';
+    let moment = require('agile:static/lib/moment/moment.min.js');
     import taskBuild  from './task.vjs';
     export default{
         data(){
@@ -103,6 +105,10 @@
                 this.branch = branch ;
                 this.path = path ;
 
+                let Agile = JSON.parse(window.localStorage.getItem('Agile'));
+                Agile.build.path =  this.$route.fullPath;
+                window.localStorage.setItem('Agile', JSON.stringify(Agile));
+
                 // 配置 config
                 axios.get(['/agile/config/', path].join("")).then( (response) => {
                     let { repertory, tasks, _id }= response.data.data[0];
@@ -127,6 +133,14 @@
                 });
 
             },
+            createTime(time){
+                let t = (new Date()).valueOf() - (new Date(time)).valueOf();
+                if(t > 1000 * 60 * 60 *24){
+                    return  moment(time).format('MM-DD H:mm:ss');
+                }else{
+                    return  moment(time).format('H:mm:ss');
+                }
+            }
         },
         components: { 
             taskBuild

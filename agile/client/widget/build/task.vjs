@@ -2,17 +2,11 @@
     <div :class='state'>
         <div class='tmpl-task'>
             <h3>{{task.taskname}}</h3>
-               <p style='display:none'>
-                   {{task.name}} 
-                   CONFIG ID{{configid}}
-                   任务ID{{task._id}}
-                   PUSHID {{item._id}}
-               </p>
                 <div v-if='info'>
                     <p><Icon type="clock">start</Icon>  {{ duration  }}</p>
                     <p><Icon type="stats-bars"></Icon> {{ info.task_status }}</p>
                     <p v-if='info.version'><Icon type="ios-calendar"></Icon> {{ info.version}}</p>
-                    <p v-for='artifact in info.artifacts'>
+                    <p v-for='artifact in info.artifacts' v-if='state !=="FAILURE"'>
                         <Icon type="locked"></Icon> <a :href='info.url +"artifact/"+ artifact.relativePath'> {{ artifact.fileName }}</a>
                     </p>
                 </div>

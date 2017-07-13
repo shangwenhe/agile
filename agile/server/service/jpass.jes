@@ -1,0 +1,73 @@
+/**
+ * @file: jpass.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-07-13
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+
+import ModelConfig from '../model/config/';
+import ModelHook from '../model/hook/';
+import util from '../lib/util';
+
+let modelConfig = new ModelConfig();
+let modelHook = new ModelHook();
+
+class ServiceJpass {
+
+    modules(query, callback) {
+        let findQuery;
+        if (Object.keys(query).indexOf('keywords') !== -1) {
+            findQuery = {
+                'path_with_namespace': new RegExp(query.keywords)
+            }
+        } else if (Object.keys(query).indexOf('prefix') !== -1) {
+            findQuery = {
+                'path_with_namespace': new RegExp('^' + query.prefix)
+            }
+        } else {
+            findQuery = {}
+        }
+        modelConfig.find(findQuery, function(err, data) {
+            callback(err, data.map(function(item) {
+                return item.path_with_namespace;
+            }));
+        });
+    }
+
+    release(query, callback) {
+        if(!query.module || !query.startTime){
+            callback({
+                msg: 'params error'
+            })
+            return; 
+        }
+        modelHook.find({
+            'project.path_with_namespace': query.module,
+            'version': /.+/,
+            'create_time': {
+                $gt: new Date(query.startTime)
+            }
+        }, (err, data) => {
+            
+            callback(null, data.map((item) => {
+                let tar = item.artifacts.shift() || {};  
+                return {
+                    releaseVersion: item.version,
+                    outputUrl: tar.tarUrl || '',
+                    creat_time: (new Date(item.create_time)).toLocaleString()
+                }
+            }).filter(function(item){
+                // 过滤没有产出包的
+                return item.outputUrl;
+            }).sort(function(v1, v2) {
+                return util.compareVersion(v1.releaseVersion, v2.releaseVersion);
+            }))
+        })
+    }
+}
+
+export
+default new ServiceJpass;
+/* eslint-enable */

@@ -56,4 +56,11 @@ module.exports = function(router){
     // 发布时更新tag 
     router.put('/release/:_id', router.action('release/index').update);
 
+
+
+    // JPASS 接口
+    router.get('/api/jpass/modules', router.action('api/jpass/index').modules);
+    router.get('/api/jpass/release', router.action('api/jpass/index').release);
+
+
 };

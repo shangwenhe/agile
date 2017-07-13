@@ -111,8 +111,13 @@
                     this.menuactive = key;
                 }
             });
+            if(route.path == '/build'){
+                let Agile = JSON.parse(window.localStorage.getItem('Agile'));
+                this.$router.push({ path: Agile.build.path });
+            }
+            window.Vue = this
         },
-        watch:{
+        watch: {
             '$route'(to, from){
                 console.log(to, from) 
             }
