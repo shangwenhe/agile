@@ -20,6 +20,8 @@ var server = yog.server = app.listen(app.get('port'), function () {
     console.log('Yog server listening on port ' + server.address().port);
 });
 
+
+
 server.on('connection', function (socket) {
     // disable nagle
     socket.setNoDelay(true);
